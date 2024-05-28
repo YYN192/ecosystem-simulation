@@ -112,6 +112,5 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 
 
-
-https://github.com/YYN192/ecosystem-simulation/assets/110526560/bedc93dc-b9a6-4ace-b61b-15a6f6c849db
+https://github.com/YYN192/ecosystem-simulation/assets/110526560/11a12e6b-3b3d-483a-afd5-760bf73b9f19
 
