@@ -63,6 +63,25 @@ Plots the populations of the species over the iterations.
         populations: A dictionary containing the population history of each species.
         iterations: The number of iterations the simulation was run.
 
+User Interface (UI)
+
+Implemented a user interface using tkinter to allow users to dynamically control simulation parameters and interact with the simulation.
+
+    Implemented Functionality:
+        Control Simulation Parameters: Users can specify parameters such as iterations, resources, species populations, birth rates, and death rates through input fields.
+        Start Simulation: Users can start the simulation with the specified parameters by clicking a button.
+        Display Simulation Report: After the simulation completes, a report summarizing each iteration is displayed in a message box.
+        Plot Population Dynamics: The population dynamics of each species are plotted over the iterations for visual analysis.
+
+Export Logs
+
+Added the ability to export simulation logs and reports to a file for further analysis.
+
+    Implemented Functionality:
+        Save Logs: Users can specify a filename and save the simulation logs and report to a JSON file by clicking a button.
+        Exported Data: The exported file contains detailed information about each iteration, including season, conditions, resources, events, and population of each species.
+        Ease of Analysis: Exporting logs allows users to analyze simulation data using external tools or perform custom analysis beyond the capabilities of the built-in report display.
+
 This project is licensed under the MIT License. See the LICENSE file for details.
 
 https://github.com/YYN192/ecosystem-simulation/assets/110526560/157bedfc-6fbe-44eb-aa40-1998d534513a
