@@ -84,5 +84,8 @@ Added the ability to export simulation logs and reports to a file for further an
 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-https://github.com/YYN192/ecosystem-simulation/assets/110526560/157bedfc-6fbe-44eb-aa40-1998d534513a
+
+
+
+https://github.com/YYN192/ecosystem-simulation/assets/110526560/bedc93dc-b9a6-4ace-b61b-15a6f6c849db
 
