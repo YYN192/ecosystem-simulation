@@ -1,5 +1,9 @@
 import random
+import tkinter as tk
+from tkinter import ttk, messagebox
 import matplotlib.pyplot as plt
+import json
+
 
 class Species:
     def __init__(self, name, population, base_birth_rate, base_death_rate):
@@ -90,6 +94,7 @@ class Species:
         self.population += self_gain
         other_species.population += other_gain
 
+
 class Environment:
     def __init__(self, resources, conditions, season='spring'):
         self.resources = resources
@@ -117,7 +122,6 @@ class Environment:
     def cause_disaster(self, species_list):
         if random.random() < self.disaster_chance:
             disaster_type = random.choice(['fire', 'flood', 'disease'])
-            print(f"Disaster: {disaster_type}")
             for species in species_list:
                 if disaster_type == 'fire':
                     species.population = max(0, int(species.population * 0.9))
@@ -125,17 +129,30 @@ class Environment:
                     species.population = max(0, int(species.population * 0.85))
                 elif disaster_type == 'disease':
                     species.population = max(0, int(species.population * 0.8))
+            return disaster_type
+        return None
+
 
 def run_simulation(species_list, environment, iterations):
     populations = {species.name: [] for species in species_list}
+    logs = []
 
     for i in range(iterations):
-        print(f"Iteration {i + 1}")
+        log_entry = {"iteration": i + 1, "season": environment.season, "conditions": environment.conditions,
+                     "resources": environment.resources, "events": []}
+
         environment.change_conditions()
         environment.update_resources()
         environment.change_season()
-        environment.cause_disaster(species_list)
-        print(f"Season = {environment.season}")
+
+        disaster_occurred = environment.cause_disaster(species_list)
+        if disaster_occurred:
+            log_entry["events"].append(f"Disaster occurred: {disaster_occurred}")
+
+        log_entry["season"] = environment.season
+        log_entry["resources"] = environment.resources
+        log_entry["conditions"] = environment.conditions
+
         for species in species_list:
             species.adjust_rates_for_season(environment.season)
             species.reproduce()
@@ -143,11 +160,31 @@ def run_simulation(species_list, environment, iterations):
             for other_species in species_list:
                 if species != other_species:
                     species.interact(other_species)
-            print(f"{species.name}: Population = {species.population}")
+            log_entry[species.name] = species.population
             populations[species.name].append(species.population)
-        print(f"Resources = {environment.resources}, Conditions = {environment.conditions}\n")
 
-    return populations
+        logs.append(log_entry)
+
+    return populations, logs
+
+
+def generate_report(logs):
+    report_lines = []
+    report_lines.append("Simulation Report")
+    report_lines.append("=================")
+    for log in logs:
+        report_lines.append(f"Iteration {log['iteration']}")
+        report_lines.append(f"  Season: {log['season']}")
+        report_lines.append(f"  Resources: {log['resources']}")
+        report_lines.append(f"  Conditions: {log['conditions']}")
+        for event in log.get("events", []):
+            report_lines.append(f"  Event: {event}")
+        for species_name, population in log.items():
+            if species_name not in ['iteration', 'season', 'conditions', 'resources', 'events']:
+                report_lines.append(f"  {species_name} Population: {population}")
+        report_lines.append("")
+    return "\n".join(report_lines)
+
 
 def plot_populations(populations, iterations):
     plt.figure(figsize=(10, 6))
@@ -159,16 +196,139 @@ def plot_populations(populations, iterations):
     plt.legend()
     plt.show()
 
-# Example usage with more species
-species1 = Species(name='Rabbits', population=100, base_birth_rate=0.1, base_death_rate=0.05)
-species2 = Species(name='Wolves', population=50, base_birth_rate=0.05, base_death_rate=0.02)
-species3 = Species(name='Deer', population=80, base_birth_rate=0.08, base_death_rate=0.04)
-species4 = Species(name='Bears', population=20, base_birth_rate=0.02, base_death_rate=0.01)
-species5 = Species(name='Eagles', population=30, base_birth_rate=0.03, base_death_rate=0.02)
 
-species_list = [species1, species2, species3, species4, species5]
-environment = Environment(resources=500, conditions='good')
+def export_logs(logs, filename):
+    with open(filename, 'w') as f:
+        json.dump(logs, f, indent=4)
 
-iterations = 50
-populations = run_simulation(species_list, environment, iterations)
-plot_populations(populations, iterations)
+logs = []
+
+def start_simulation():
+    global logs
+    try:
+        iterations = int(iterations_entry.get())
+        resources = int(resources_entry.get())
+
+        species_list = [
+            Species(name='Rabbits', population=int(rabbits_population_entry.get()),
+                    base_birth_rate=float(rabbits_birth_rate_entry.get()),
+                    base_death_rate=float(rabbits_death_rate_entry.get())),
+            Species(name='Wolves', population=int(wolves_population_entry.get()),
+                    base_birth_rate=float(wolves_birth_rate_entry.get()),
+                    base_death_rate=float(wolves_death_rate_entry.get())),
+            Species(name='Deer', population=int(deer_population_entry.get()),
+                    base_birth_rate=float(deer_birth_rate_entry.get()),
+                    base_death_rate=float(deer_death_rate_entry.get())),
+            Species(name='Bears', population=int(bears_population_entry.get()),
+                    base_birth_rate=float(bears_birth_rate_entry.get()),
+                    base_death_rate=float(bears_death_rate_entry.get())),
+            Species(name='Eagles', population=int(eagles_population_entry.get()),
+                    base_birth_rate=float(eagles_birth_rate_entry.get()),
+                    base_death_rate=float(eagles_death_rate_entry.get()))
+        ]
+
+        environment = Environment(resources=resources, conditions='good')
+        populations, logs = run_simulation(species_list, environment, iterations)
+        report = generate_report(logs)
+        messagebox.showinfo("Simulation Report", report)
+        plot_populations(populations, iterations)
+    except ValueError as e:
+        messagebox.showerror("Input Error", f"Invalid input: {e}")
+
+
+def save_logs():
+    filename = filename_entry.get()
+    if filename:
+        export_logs(logs, filename)
+        messagebox.showinfo("Save Logs", f"Logs saved to {filename}")
+    else:
+        messagebox.showerror("Input Error", "Please enter a filename")
+
+
+# Create the UI using tkinter
+root = tk.Tk()
+root.title("Ecosystem Simulation")
+
+mainframe = ttk.Frame(root, padding="10 10 20 20")
+mainframe.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+
+ttk.Label(mainframe, text="Iterations:").grid(row=0, column=0, sticky=tk.W)
+iterations_entry = ttk.Entry(mainframe)
+iterations_entry.grid(row=0, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(mainframe, text="Resources:").grid(row=1, column=0, sticky=tk.W)
+resources_entry = ttk.Entry(mainframe)
+resources_entry.grid(row=1, column=1, sticky=(tk.W, tk.E))
+
+species_frame = ttk.LabelFrame(mainframe, text="Species Parameters", padding="10 10 20 20")
+species_frame.grid(row=2, column=0, columnspan=2, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Rabbits Population:").grid(row=0, column=0, sticky=tk.W)
+rabbits_population_entry = ttk.Entry(species_frame)
+rabbits_population_entry.grid(row=0, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Rabbits Birth Rate:").grid(row=1, column=0, sticky=tk.W)
+rabbits_birth_rate_entry = ttk.Entry(species_frame)
+rabbits_birth_rate_entry.grid(row=1, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Rabbits Death Rate:").grid(row=2, column=0, sticky=tk.W)
+rabbits_death_rate_entry = ttk.Entry(species_frame)
+rabbits_death_rate_entry.grid(row=2, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Wolves Population:").grid(row=3, column=0, sticky=tk.W)
+wolves_population_entry = ttk.Entry(species_frame)
+wolves_population_entry.grid(row=3, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Wolves Birth Rate:").grid(row=4, column=0, sticky=tk.W)
+wolves_birth_rate_entry = ttk.Entry(species_frame)
+wolves_birth_rate_entry.grid(row=4, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Wolves Death Rate:").grid(row=5, column=0, sticky=tk.W)
+wolves_death_rate_entry = ttk.Entry(species_frame)
+wolves_death_rate_entry.grid(row=5, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Deer Population:").grid(row=6, column=0, sticky=tk.W)
+deer_population_entry = ttk.Entry(species_frame)
+deer_population_entry.grid(row=6, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Deer Birth Rate:").grid(row=7, column=0, sticky=tk.W)
+deer_birth_rate_entry = ttk.Entry(species_frame)
+deer_birth_rate_entry.grid(row=7, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Deer Death Rate:").grid(row=8, column=0, sticky=tk.W)
+deer_death_rate_entry = ttk.Entry(species_frame)
+deer_death_rate_entry.grid(row=8, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Bears Population:").grid(row=9, column=0, sticky=tk.W)
+bears_population_entry = ttk.Entry(species_frame)
+bears_population_entry.grid(row=9, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Bears Birth Rate:").grid(row=10, column=0, sticky=tk.W)
+bears_birth_rate_entry = ttk.Entry(species_frame)
+bears_birth_rate_entry.grid(row=10, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Bears Death Rate:").grid(row=11, column=0, sticky=tk.W)
+bears_death_rate_entry = ttk.Entry(species_frame)
+bears_death_rate_entry.grid(row=11, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Eagles Population:").grid(row=12, column=0, sticky=tk.W)
+eagles_population_entry = ttk.Entry(species_frame)
+eagles_population_entry.grid(row=12, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Eagles Birth Rate:").grid(row=13, column=0, sticky=tk.W)
+eagles_birth_rate_entry = ttk.Entry(species_frame)
+eagles_birth_rate_entry.grid(row=13, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Eagles Death Rate:").grid(row=14, column=0, sticky=tk.W)
+eagles_death_rate_entry = ttk.Entry(species_frame)
+eagles_death_rate_entry.grid(row=14, column=1, sticky=(tk.W, tk.E))
+
+ttk.Button(mainframe, text="Start Simulation", command=start_simulation).grid(row=3, column=0, columnspan=2,
+                                                                              sticky=(tk.W, tk.E))
+ttk.Button(mainframe, text="Save Logs", command=save_logs).grid(row=4, column=0, columnspan=2, sticky=(tk.W, tk.E))
+
+ttk.Label(mainframe, text="Filename:").grid(row=5, column=0, sticky=tk.W)
+filename_entry = ttk.Entry(mainframe)
+filename_entry.grid(row=5, column=1, sticky=(tk.W, tk.E))
+
+root.mainloop()
