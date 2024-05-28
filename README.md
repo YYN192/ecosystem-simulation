@@ -72,7 +72,9 @@ Implemented a user interface using tkinter to allow users to dynamically control
         Start Simulation: Users can start the simulation with the specified parameters by clicking a button.
         Display Simulation Report: After the simulation completes, a report summarizing each iteration is displayed in a message box.
         Plot Population Dynamics: The population dynamics of each species are plotted over the iterations for visual analysis.
-    Example values
+        
+    Example values:
+    
     Simulation Parameters
 
         Iterations: 50
