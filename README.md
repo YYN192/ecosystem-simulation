@@ -72,6 +72,29 @@ Implemented a user interface using tkinter to allow users to dynamically control
         Start Simulation: Users can start the simulation with the specified parameters by clicking a button.
         Display Simulation Report: After the simulation completes, a report summarizing each iteration is displayed in a message box.
         Plot Population Dynamics: The population dynamics of each species are plotted over the iterations for visual analysis.
+    Example values
+    Simulation Parameters
+
+        Iterations: 50
+        Resources: 500
+
+    Species Parameters
+
+        Rabbits Population: 100
+        Rabbits Birth Rate: 0.1
+        Rabbits Death Rate: 0.05
+        Wolves Population: 50
+        Wolves Birth Rate: 0.05
+        Wolves Death Rate: 0.02
+        Deer Population: 80
+        Deer Birth Rate: 0.08
+        Deer Death Rate: 0.04
+        Bears Population: 20
+        Bears Birth Rate: 0.02
+        Bears Death Rate: 0.01
+        Eagles Population: 30
+        Eagles Birth Rate: 0.03
+        Eagles Death Rate: 0.02
 
 Export Logs
 
@@ -81,6 +104,7 @@ Added the ability to export simulation logs and reports to a file for further an
         Save Logs: Users can specify a filename and save the simulation logs and report to a JSON file by clicking a button.
         Exported Data: The exported file contains detailed information about each iteration, including season, conditions, resources, events, and population of each species.
         Ease of Analysis: Exporting logs allows users to analyze simulation data using external tools or perform custom analysis beyond the capabilities of the built-in report display.
+
 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
