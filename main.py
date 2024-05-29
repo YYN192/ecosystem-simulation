@@ -6,43 +6,48 @@ import json
 
 
 class Species:
-    def __init__(self, name, population, base_birth_rate, base_death_rate):
+    def __init__(self, name, population, base_birth_rate, base_death_rate, predation_rate=0.1):
         self.name = name
         self.population = population
         self.base_birth_rate = base_birth_rate
         self.base_death_rate = base_death_rate
         self.birth_rate = base_birth_rate
         self.death_rate = base_death_rate
+        self.predation_rate = predation_rate
 
     def adjust_rates_for_season(self, season):
         if season == 'spring':
-            self.birth_rate = self.base_birth_rate * 1.5
-            self.death_rate = self.base_death_rate * 0.8
+            self.birth_rate = self.base_birth_rate * 1.2
+            self.death_rate = self.base_death_rate * 0.9
         elif season == 'summer':
             self.birth_rate = self.base_birth_rate
             self.death_rate = self.base_death_rate
         elif season == 'autumn':
             self.birth_rate = self.base_birth_rate * 0.8
-            self.death_rate = self.base_death_rate * 1.2
+            self.death_rate = self.base_death_rate * 1.1
         elif season == 'winter':
-            self.birth_rate = self.base_birth_rate * 0.5
-            self.death_rate = self.base_death_rate * 1.5
+            self.birth_rate = self.base_birth_rate * 0.6
+            self.death_rate = self.base_death_rate * 1.3
 
     def reproduce(self):
-        births = self.population * self.birth_rate
-        self.population += int(births)
+        births = int(self.population * self.birth_rate)
+        self.population += births
 
     def die(self):
-        deaths = self.population * self.death_rate
-        self.population -= int(deaths)
+        deaths = int(self.population * self.death_rate)
+        self.population -= deaths
 
     def interact(self, other_species):
         if self.name == 'Eagles' and other_species.name == 'Rabbits':
-            self.prey_on_rabbits(other_species)
-        elif self.name == 'Wolves' and other_species.name == 'Deer':
-            self.prey_on_deer(other_species)
-        elif self.name == 'Bears' and other_species.name in ['Rabbits', 'Deer']:
-            self.prey_on_smaller_animals(other_species)
+            self.prey_on(other_species)
+        elif self.name == 'Wolves' and other_species.name in ['Deer', 'Rabbits']:
+            self.prey_on(other_species)
+        elif self.name == 'Bears' and other_species.name in ['Deer', 'Rabbits']:
+            self.prey_on(other_species)
+        elif self.name == 'Foxes' and other_species.name == 'Rabbits':
+            self.prey_on(other_species)
+        elif self.name == 'Hawks' and other_species.name in ['Rabbits', 'Foxes']:
+            self.prey_on(other_species)
         elif self.name == 'Deer' and other_species.name == 'Rabbits':
             self.competition_for_food(other_species)
         else:
@@ -52,23 +57,8 @@ class Species:
             elif interaction_type == 'symbiosis':
                 self.symbiosis(other_species)
 
-    def prey_on_rabbits(self, rabbits):
-        predation_rate = 0.15
-        prey_loss = int(rabbits.population * predation_rate)
-        prey_loss = min(prey_loss, self.population)
-        rabbits.population -= prey_loss
-        self.population += prey_loss
-
-    def prey_on_deer(self, deer):
-        predation_rate = 0.1
-        prey_loss = int(deer.population * predation_rate)
-        prey_loss = min(prey_loss, self.population)
-        deer.population -= prey_loss
-        self.population += prey_loss
-
-    def prey_on_smaller_animals(self, prey):
-        predation_rate = 0.05
-        prey_loss = int(prey.population * predation_rate)
+    def prey_on(self, prey):
+        prey_loss = int(prey.population * self.predation_rate)
         prey_loss = min(prey_loss, self.population)
         prey.population -= prey_loss
         self.population += prey_loss
@@ -102,7 +92,8 @@ class Environment:
         self.season = season
         self.seasons = ['spring', 'summer', 'autumn', 'winter']
         self.season_index = 0
-        self.disaster_chance = 0.1  # 10% chance of a disaster each iteration
+        self.disaster_chance = 0.01  # 10% chance of a disaster each iteration
+        self.event_chance = 0.02  # 20% chance of a special event each iteration
         self.depletion_rate = 0.05  # 5% resource depletion each iteration
 
     def change_conditions(self):
@@ -132,14 +123,32 @@ class Environment:
             return disaster_type
         return None
 
+    def cause_event(self, species_list):
+        if random.random() < self.event_chance:
+            event_type = random.choice(['drought', 'cold_snap', 'food_abundance'])
+            for species in species_list:
+                if event_type == 'drought':
+                    species.population = max(0, int(species.population * 0.95))
+                elif event_type == 'cold_snap':
+                    species.population = max(0, int(species.population * 0.9))
+                elif event_type == 'food_abundance':
+                    species.population += int(species.population * 0.1)
+            return event_type
+        return None
+
 
 def run_simulation(species_list, environment, iterations):
     populations = {species.name: [] for species in species_list}
     logs = []
 
     for i in range(iterations):
-        log_entry = {"iteration": i + 1, "season": environment.season, "conditions": environment.conditions,
-                     "resources": environment.resources, "events": []}
+        log_entry = {
+            "iteration": i + 1,
+            "season": environment.season,
+            "conditions": environment.conditions,
+            "resources": environment.resources,
+            "events": []
+        }
 
         environment.change_conditions()
         environment.update_resources()
@@ -148,6 +157,10 @@ def run_simulation(species_list, environment, iterations):
         disaster_occurred = environment.cause_disaster(species_list)
         if disaster_occurred:
             log_entry["events"].append(f"Disaster occurred: {disaster_occurred}")
+
+        event_occurred = environment.cause_event(species_list)
+        if event_occurred:
+            log_entry["events"].append(f"Event occurred: {event_occurred}")
 
         log_entry["season"] = environment.season
         log_entry["resources"] = environment.resources
@@ -201,10 +214,12 @@ def export_logs(logs, filename):
     with open(filename, 'w') as f:
         json.dump(logs, f, indent=4)
 
+
+# Global variable to store logs
 logs = []
 
 def start_simulation():
-    global logs
+    global logs  # Declare logs as global to modify it
     try:
         iterations = int(iterations_entry.get())
         resources = int(resources_entry.get())
@@ -224,7 +239,13 @@ def start_simulation():
                     base_death_rate=float(bears_death_rate_entry.get())),
             Species(name='Eagles', population=int(eagles_population_entry.get()),
                     base_birth_rate=float(eagles_birth_rate_entry.get()),
-                    base_death_rate=float(eagles_death_rate_entry.get()))
+                    base_death_rate=float(eagles_death_rate_entry.get())),
+            Species(name='Foxes', population=int(foxes_population_entry.get()),
+                    base_birth_rate=float(foxes_birth_rate_entry.get()),
+                    base_death_rate=float(foxes_death_rate_entry.get())),
+            Species(name='Hawks', population=int(hawks_population_entry.get()),
+                    base_birth_rate=float(hawks_birth_rate_entry.get()),
+                    base_death_rate=float(hawks_death_rate_entry.get()))
         ]
 
         environment = Environment(resources=resources, conditions='good')
@@ -323,8 +344,31 @@ ttk.Label(species_frame, text="Eagles Death Rate:").grid(row=14, column=0, stick
 eagles_death_rate_entry = ttk.Entry(species_frame)
 eagles_death_rate_entry.grid(row=14, column=1, sticky=(tk.W, tk.E))
 
-ttk.Button(mainframe, text="Start Simulation", command=start_simulation).grid(row=3, column=0, columnspan=2,
-                                                                              sticky=(tk.W, tk.E))
+ttk.Label(species_frame, text="Foxes Population:").grid(row=15, column=0, sticky=tk.W)
+foxes_population_entry = ttk.Entry(species_frame)
+foxes_population_entry.grid(row=15, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Foxes Birth Rate:").grid(row=16, column=0, sticky=tk.W)
+foxes_birth_rate_entry = ttk.Entry(species_frame)
+foxes_birth_rate_entry.grid(row=16, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Foxes Death Rate:").grid(row=17, column=0, sticky=tk.W)
+foxes_death_rate_entry = ttk.Entry(species_frame)
+foxes_death_rate_entry.grid(row=17, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Hawks Population:").grid(row=18, column=0, sticky=tk.W)
+hawks_population_entry = ttk.Entry(species_frame)
+hawks_population_entry.grid(row=18, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Hawks Birth Rate:").grid(row=19, column=0, sticky=tk.W)
+hawks_birth_rate_entry = ttk.Entry(species_frame)
+hawks_birth_rate_entry.grid(row=19, column=1, sticky=(tk.W, tk.E))
+
+ttk.Label(species_frame, text="Hawks Death Rate:").grid(row=20, column=0, sticky=tk.W)
+hawks_death_rate_entry = ttk.Entry(species_frame)
+hawks_death_rate_entry.grid(row=20, column=1, sticky=(tk.W, tk.E))
+
+ttk.Button(mainframe, text="Start Simulation", command=start_simulation).grid(row=3, column=0, columnspan=2, sticky=(tk.W, tk.E))
 ttk.Button(mainframe, text="Save Logs", command=save_logs).grid(row=4, column=0, columnspan=2, sticky=(tk.W, tk.E))
 
 ttk.Label(mainframe, text="Filename:").grid(row=5, column=0, sticky=tk.W)
