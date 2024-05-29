@@ -27,24 +27,21 @@ Ensure you have the following installed:
 - `matplotlib` for plotting graphs
 - `tkinter` for the user interface
 
-```
 pip install matplotlib
 
 Installing
 
     Clone the repository:
 
-bash
+```
 
 git clone https://github.com/YYN192/ecosystem-simulation
 cd ecosystem-simulation
-
+```
     Run the simulation:
-
-bash
-
+```
 python main.py
-
+```
 🎮 Usage
 
     Enter the number of iterations and initial resources.
