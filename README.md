@@ -79,18 +79,19 @@ The UI is built using tkinter and allows users to input parameters, run the simu
 📊 Example Results
 
 Simulation Report Example:
-
-Simulation Report
-=================
-Iteration 1
-  Season: Spring
-  Resources: 950
-  Conditions: Good
-  Rabbits Population: 500
-  Wolves Population: 100
-  Deer Population: 300
-  Bears Population: 50
-  Eagles Population: 30
+```
+  Simulation Report
+  =================
+  Iteration 1
+    Season: Spring
+    Resources: 950
+    Conditions: Good
+    Rabbits Population: 500
+    Wolves Population: 100
+    Deer Population: 300
+    Bears Population: 50
+    Eagles Population: 30
+```
 
 🤝 Contributing
 
