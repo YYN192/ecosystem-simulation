@@ -193,8 +193,7 @@ The UI is built using tkinter and allows users to input parameters, run the simu
     }
 ]
 ```
-Every iteration is a season meaning this program will simulate 2 years
-
+Every iteration is a season meaning this example is a simulation of 2 years
 ![github](https://github.com/YYN192/ecosystem-simulation/assets/110526560/3bddb25a-c0e7-48f3-bdc7-2d56f36d3fd5)
 
 🤝 Contributing
