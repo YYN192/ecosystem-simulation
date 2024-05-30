@@ -6,7 +6,7 @@ This project simulates an ecosystem with various species interacting with each o
 
 - **Species Interactions**: 🦅 Predation, 🐺 competition, and 🤝 symbiosis between species.
 - **Environmental Factors**: 🌞 Seasonal changes, 🌱 resource depletion, and 🎲 random events such as disasters and special occurrences.
-- **Dynamic Population Changes**: Species populations adjust based on birth and death rates, which are influenced by the environment.
+- **Dynamic Population Changes**: Species populations adjust based on birth and death rates, influenced by the environment.
 
 ## 🐾 Species Included
 
@@ -43,9 +43,9 @@ This project simulates an ecosystem with various species interacting with each o
 - **Iterations**: Number of cycles the simulation will run.
 - **Resources**: Initial amount of resources available in the environment.
 - **Species Parameters**:
-  - Population: Initial number of individuals in the species.
-  - Birth Rate: Base rate at which the species reproduces.
-  - Death Rate: Base rate at which individuals in the species die.
+  - **Population**: Initial number of individuals in the species.
+  - **Birth Rate**: Base rate at which the species reproduces.
+  - **Death Rate**: Base rate at which individuals in the species die.
 
 ## 🖥️ GUI Interface
 
@@ -88,6 +88,10 @@ Represents the environment with resources, conditions, and the current season. I
 
 - `start_simulation`: Starts the simulation and displays the results.
 - `save_logs`: Saves the simulation logs to a specified file.
+
+## 🤝 Contribution
+
+We welcome contributions to this project! If you're interested in contributing, please read our [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines on how to get started.
 
 ## 📜 License
 
