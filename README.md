@@ -1,207 +1,94 @@
-# 🌿 Ecosystem Simulation
+# 🌿 Ecosystem Simulation 🌿
 
-This project simulates an ecosystem with various species interacting within a changing environment. Users can customize parameters and visualize the population changes over time.
+This project simulates an ecosystem with various species interacting with each other and their environment over a series of iterations. The simulation accounts for seasonal changes, disasters, events, and resource availability.
 
-## 📋 Table of Contents
+## 🌟 Features
 
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-- [Simulation Details](#simulation-details)
-  - [Species](#species)
-  - [Environment](#environment)
-- [User Interface](#user-interface)
-- [Example Results](#example-results)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+- **Species Interactions**: 🦅 Predation, 🐺 competition, and 🤝 symbiosis between species.
+- **Environmental Factors**: 🌞 Seasonal changes, 🌱 resource depletion, and 🎲 random events such as disasters and special occurrences.
+- **Dynamic Population Changes**: Species populations adjust based on birth and death rates, which are influenced by the environment.
 
-## 🚀 Getting Started
+## 🐾 Species Included
 
-Follow these instructions to get the project up and running on your local machine.
+- 🐰 Rabbits
+- 🐺 Wolves
+- 🦌 Deer
+- 🐻 Bears
+- 🦅 Eagles
+- 🦊 Foxes
+- 🦅 Hawks
 
-### Prerequisites
+## ⚙️ Installation
 
-Ensure you have the following installed:
+1. Ensure you have Python installed.
+2. Install the required packages:
+    ```sh
+    pip install tkinter matplotlib
+    ```
 
-- Python 3.10 or higher
-- `matplotlib` for plotting graphs
-- `tkinter` for the user interface
+## 🚀 Usage
 
-pip install matplotlib
+1. Run the script to start the simulation interface:
+    ```sh
+    python ecosystem_simulation.py
+    ```
+2. Enter the number of iterations and initial resource quantity.
+3. Enter the initial population and birth/death rates for each species.
+4. Click "Start Simulation" to run the simulation.
+5. View the simulation report and population plots.
+6. Optionally, save the simulation logs to a file.
 
-Installing
+## 📊 Simulation Parameters
 
-    Clone the repository:
+- **Iterations**: Number of cycles the simulation will run.
+- **Resources**: Initial amount of resources available in the environment.
+- **Species Parameters**:
+  - Population: Initial number of individuals in the species.
+  - Birth Rate: Base rate at which the species reproduces.
+  - Death Rate: Base rate at which individuals in the species die.
 
-```
+## 🖥️ GUI Interface
 
-git clone https://github.com/YYN192/ecosystem-simulation
-cd ecosystem-simulation
-```
-    Run the simulation:
-```
-python main.py
-```
-🎮 Usage
+The simulation provides a graphical user interface (GUI) built with `tkinter`. The interface allows users to input the simulation parameters and view results.
 
-    Enter the number of iterations and initial resources.
-    Set the parameters for each species (population, birth rate, death rate).
-    Click "Start Simulation" to begin.
-    View the simulation report and population graph.
-    Save the logs if needed.
+### Main Interface Elements
 
-🌍 Simulation Details
-Species
+- **Iterations**: Number of iterations to run the simulation.
+- **Resources**: Initial resources in the environment.
+- **Species Parameters**: Fields for inputting population, birth rate, and death rate for each species.
+- **Buttons**:
+  - **Start Simulation**: Runs the simulation with the provided parameters.
+  - **Save Logs**: Saves the simulation logs to a specified file.
 
-    Rabbits
-    Wolves
-    Deer
-    Bears
-    Eagles
+## 🌼 Example
 
-Each species has customizable parameters:
+1. Input the simulation parameters.
+2. Click "Start Simulation".
+3. Review the simulation report and population plots displayed.
+4. Optionally, save the logs by entering a filename and clicking "Save Logs".
 
-    Population
-    Birth Rate
-    Death Rate
+## 📝 Code Overview
 
-Environment
+### `Species` Class
 
-    Resources: The initial amount of resources available.
-    Conditions: Good or bad, affecting resource updates.
-    Seasons: Spring, Summer, Autumn, Winter, affecting species' birth and death rates.
-    Disasters: Random events (fire, flood, disease) impacting species populations.
+Represents a species with attributes like name, population, birth rate, and death rate. It includes methods for adjusting rates based on the season, reproducing, dying, and interacting with other species.
 
-🖥️ User Interface
+### `Environment` Class
 
-The UI is built using tkinter and allows users to input parameters, run the simulation, and view results.
+Represents the environment with resources, conditions, and the current season. It includes methods for changing conditions, updating resources, changing seasons, and causing disasters or special events.
 
-📊 Example Results
-```
-[
-    {
-        "iteration": 1,
-        "season": "summer",
-        "conditions": "good",
-        "resources": 38048,
-        "events": [],
-        "Rabbits": 817,
-        "Wolves": 370,
-        "Deer": 382,
-        "Bears": 264,
-        "Eagles": 208,
-        "Foxes": 351,
-        "Hawks": 472
-    },
-    {
-        "iteration": 2,
-        "season": "autumn",
-        "conditions": "bad",
-        "resources": 36099,
-        "events": [],
-        "Rabbits": 570,
-        "Wolves": 352,
-        "Deer": 243,
-        "Bears": 290,
-        "Eagles": 193,
-        "Foxes": 253,
-        "Hawks": 424
-    },
-    {
-        "iteration": 3,
-        "season": "winter",
-        "conditions": "good",
-        "resources": 34342,
-        "events": [],
-        "Rabbits": 311,
-        "Wolves": 374,
-        "Deer": 163,
-        "Bears": 330,
-        "Eagles": 192,
-        "Foxes": 190,
-        "Hawks": 397
-    },
-    {
-        "iteration": 4,
-        "season": "spring",
-        "conditions": "good",
-        "resources": 32673,
-        "events": [],
-        "Rabbits": 314,
-        "Wolves": 461,
-        "Deer": 117,
-        "Bears": 361,
-        "Eagles": 189,
-        "Foxes": 167,
-        "Hawks": 375
-    },
-    {
-        "iteration": 5,
-        "season": "summer",
-        "conditions": "good",
-        "resources": 31087,
-        "events": [],
-        "Rabbits": 266,
-        "Wolves": 411,
-        "Deer": 91,
-        "Bears": 400,
-        "Eagles": 223,
-        "Foxes": 159,
-        "Hawks": 323
-    },
-    {
-        "iteration": 6,
-        "season": "autumn",
-        "conditions": "good",
-        "resources": 29581,
-        "events": [],
-        "Rabbits": 185,
-        "Wolves": 447,
-        "Deer": 69,
-        "Bears": 358,
-        "Eagles": 204,
-        "Foxes": 168,
-        "Hawks": 277
-    },
-    {
-        "iteration": 7,
-        "season": "winter",
-        "conditions": "bad",
-        "resources": 28055,
-        "events": [],
-        "Rabbits": 126,
-        "Wolves": 373,
-        "Deer": 77,
-        "Bears": 357,
-        "Eagles": 199,
-        "Foxes": 114,
-        "Hawks": 246
-    },
-    {
-        "iteration": 8,
-        "season": "spring",
-        "conditions": "good",
-        "resources": 26700,
-        "events": [],
-        "Rabbits": 110,
-        "Wolves": 320,
-        "Deer": 54,
-        "Bears": 253,
-        "Eagles": 181,
-        "Foxes": 85,
-        "Hawks": 214
-    }
-]
-```
-Every iteration is a season meaning this example is a simulation of 2 years
-![github](https://github.com/YYN192/ecosystem-simulation/assets/110526560/3bddb25a-c0e7-48f3-bdc7-2d56f36d3fd5)
+### Simulation Functions
 
-🤝 Contributing
+- `run_simulation`: Runs the simulation for a specified number of iterations.
+- `generate_report`: Generates a textual report of the simulation.
+- `plot_populations`: Plots the populations of each species over time.
+- `export_logs`: Exports the simulation logs to a JSON file.
 
-Contributions are welcome! Please read CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
-📜 License
+### GUI Functions
 
-This project is licensed under the MIT License - see the LICENSE.md file for details.
-🙏 Acknowledgments
+- `start_simulation`: Starts the simulation and displays the results.
+- `save_logs`: Saves the simulation logs to a specified file.
 
-    Inspiration and guidance from various online resources and tutorials.
+## 📜 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
