@@ -74,7 +74,8 @@ The simulation provides a graphical user interface (GUI) built with `tkinter`. T
 3. Review the simulation report and population plots displayed.
 4. Optionally, save the logs by entering a filename and clicking "Save Logs".
 
-![Simulation Screenshot](https://github.com/YYN192/ecosystem-simulation/assets/110526560/3db6c967-ea2c-4dc6-a50a-ad759eef9fa7)
+![Simulation Screenshot](https://github.com/YYN192/ecosystem-simulation/assets/110526560/f34d7f8a-ecde-44e2-b8ab-effd04b00cdf)
+
 
 ## 📝 Code Overview
 
