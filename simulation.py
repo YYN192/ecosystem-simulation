@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import json
-
 from species import Species
 from environment import Environment
 
@@ -47,11 +46,8 @@ def run_simulation(species_list, environment, iterations):
 
     return populations, logs
 
-
 def generate_report(logs):
-    report_lines = []
-    report_lines.append("Simulation Report")
-    report_lines.append("=================")
+    report_lines = ["Simulation Report", "================="]
     for log in logs:
         report_lines.append(f"Iteration {log['iteration']}")
         report_lines.append(f"  Season: {log['season']}")
@@ -65,7 +61,6 @@ def generate_report(logs):
         report_lines.append("")
     return "\n".join(report_lines)
 
-
 def plot_populations(populations, iterations):
     plt.figure(figsize=(10, 6))
     for species, population in populations.items():
@@ -75,7 +70,6 @@ def plot_populations(populations, iterations):
     plt.title('Ecosystem Simulation')
     plt.legend()
     plt.show()
-
 
 def export_logs(logs, filename):
     with open(filename, 'w') as f:
