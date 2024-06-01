@@ -1,36 +1,35 @@
+from dataclasses import dataclass, field
 import random
 
+@dataclass
 class Species:
-    def __init__(self, name, population, base_birth_rate, base_death_rate, predation_rate=0.1):
-        self.name = name
-        self.population = population
-        self.base_birth_rate = base_birth_rate
-        self.base_death_rate = base_death_rate
-        self.birth_rate = base_birth_rate
-        self.death_rate = base_death_rate
-        self.predation_rate = predation_rate
+    name: str
+    population: int
+    base_birth_rate: float
+    base_death_rate: float
+    predation_rate: float = 0.1
+    birth_rate: float = field(init=False)
+    death_rate: float = field(init=False)
+
+    def __post_init__(self):
+        self.birth_rate = self.base_birth_rate
+        self.death_rate = self.base_death_rate
 
     def adjust_rates_for_season(self, season):
-        if season == 'spring':
-            self.birth_rate = self.base_birth_rate * 1.2
-            self.death_rate = self.base_death_rate * 0.9
-        elif season == 'summer':
-            self.birth_rate = self.base_birth_rate
-            self.death_rate = self.base_death_rate
-        elif season == 'autumn':
-            self.birth_rate = self.base_birth_rate * 0.8
-            self.death_rate = self.base_death_rate * 1.1
-        elif season == 'winter':
-            self.birth_rate = self.base_birth_rate * 0.6
-            self.death_rate = self.base_death_rate * 1.3
+        rates = {
+            'spring': (1.2, 0.9),
+            'summer': (1.0, 1.0),
+            'autumn': (0.8, 1.1),
+            'winter': (0.6, 1.3)
+        }
+        self.birth_rate = self.base_birth_rate * rates[season][0]
+        self.death_rate = self.base_death_rate * rates[season][1]
 
     def reproduce(self):
-        births = int(self.population * self.birth_rate)
-        self.population += births
+        self.population += int(self.population * self.birth_rate)
 
     def die(self):
-        deaths = int(self.population * self.death_rate)
-        self.population -= deaths
+        self.population -= int(self.population * self.death_rate)
 
     def interact(self, other_species):
         if self.name == 'Eagles' and other_species.name == 'Rabbits':
@@ -46,35 +45,31 @@ class Species:
         elif self.name == 'Deer' and other_species.name == 'Rabbits':
             self.competition_for_food(other_species)
         else:
-            interaction_type = random.choice(['competition', 'symbiosis'])
-            if interaction_type == 'competition':
-                self.competition(other_species)
-            elif interaction_type == 'symbiosis':
-                self.symbiosis(other_species)
+            self.random_interaction(other_species)
 
     def prey_on(self, prey):
-        prey_loss = int(prey.population * self.predation_rate)
-        prey_loss = min(prey_loss, self.population)
+        prey_loss = min(int(prey.population * self.predation_rate), self.population)
         prey.population -= prey_loss
         self.population += prey_loss
 
     def competition_for_food(self, other_species):
         competition_rate = 0.03
-        self_loss = int(self.population * competition_rate)
-        other_loss = int(other_species.population * competition_rate)
-        self.population -= self_loss
-        other_species.population -= other_loss
+        self.population -= int(self.population * competition_rate)
+        other_species.population -= int(other_species.population * competition_rate)
+
+    def random_interaction(self, other_species):
+        interaction_type = random.choice(['competition', 'symbiosis'])
+        if interaction_type == 'competition':
+            self.competition(other_species)
+        else:
+            self.symbiosis(other_species)
 
     def competition(self, other_species):
         competition_rate = 0.05
-        self_loss = int(self.population * competition_rate)
-        other_loss = int(other_species.population * competition_rate)
-        self.population -= self_loss
-        other_species.population -= other_loss
+        self.population -= int(self.population * competition_rate)
+        other_species.population -= int(other_species.population * competition_rate)
 
     def symbiosis(self, other_species):
         symbiosis_rate = 0.02
-        self_gain = int(other_species.population * symbiosis_rate)
-        other_gain = int(self.population * symbiosis_rate)
-        self.population += self_gain
-        other_species.population += other_gain
+        self.population += int(other_species.population * symbiosis_rate)
+        other_species.population += int(self.population * symbiosis_rate)
