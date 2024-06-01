@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-
 from species import Species
 from environment import Environment
 from simulation import run_simulation, generate_report, plot_populations, export_logs
@@ -9,7 +8,7 @@ from simulation import run_simulation, generate_report, plot_populations, export
 logs = []
 
 def start_simulation():
-    global logs  # Declare logs as global to modify it
+    global logs
     try:
         iterations = int(iterations_entry.get())
         resources = int(resources_entry.get())
@@ -69,6 +68,33 @@ def export_simulation_logs():
     export_logs(logs, filename)
     messagebox.showinfo("Success", f"Logs exported as {filename}.")
 
+def autofill():
+    iterations_entry.delete(0, tk.END)
+    iterations_entry.insert(0, "8")
+
+    resources_entry.delete(0, tk.END)
+    resources_entry.insert(0, "1000")
+
+    species_data = {
+        'Rabbits': (800, 0.5, 0.01),
+        'Deer': (400, 0.03, 0.03),
+        'Eagles': (600, 0.03, 0.03),
+        'Wolves': (300, 0.04, 0.01),
+        'Bears': (300, 0.04, 0.01),
+        'Foxes': (400, 0.059, 0.04),
+        'Hawks': (300, 0.06, 0.05)
+    }
+
+    for name, (pop, birth_rate, death_rate) in species_data.items():
+        for entry in species_entries:
+            if entry[0] == name:
+                entry[1].delete(0, tk.END)
+                entry[1].insert(0, str(pop))
+                entry[2].delete(0, tk.END)
+                entry[2].insert(0, str(birth_rate))
+                entry[3].delete(0, tk.END)
+                entry[3].insert(0, str(death_rate))
+
 root = tk.Tk()
 root.title("Ecosystem Simulation")
 
@@ -115,7 +141,7 @@ bears_population_entry, bears_birth_rate_entry, bears_death_rate_entry = create_
 foxes_population_entry, foxes_birth_rate_entry, foxes_death_rate_entry = create_species_entry(17, 'Foxes')
 hawks_population_entry, hawks_birth_rate_entry, hawks_death_rate_entry = create_species_entry(20, 'Hawks')
 
-# Buttons for starting simulation, saving report, and exporting logs
+# Buttons for starting simulation, saving report, exporting logs, and autofill
 start_button = ttk.Button(mainframe, text="Start Simulation", command=start_simulation)
 start_button.grid(row=23, column=0, columnspan=2, pady=10)
 
@@ -124,5 +150,8 @@ save_report_button.grid(row=24, column=0, columnspan=2, pady=10)
 
 export_logs_button = ttk.Button(mainframe, text="Export Logs", command=export_simulation_logs)
 export_logs_button.grid(row=25, column=0, columnspan=2, pady=10)
+
+autofill_button = ttk.Button(mainframe, text="Autofill", command=autofill)
+autofill_button.grid(row=26, column=0, columnspan=2, pady=10)
 
 root.mainloop()
