@@ -1,24 +1,22 @@
+from dataclasses import dataclass, field
 import random
 
+@dataclass
 class Environment:
-    def __init__(self, resources, conditions, season='spring'):
-        self.resources = resources
-        self.conditions = conditions
-        self.season = season
-        self.seasons = ['spring', 'summer', 'autumn', 'winter']
-        self.season_index = 0
-        self.disaster_chance = 0.01  # 1% chance of a disaster each iteration
-        self.event_chance = 0.02  # 2% chance of a special event each iteration
-        self.depletion_rate = 0.05  # 5% resource depletion each iteration
+    resources: int
+    conditions: str
+    season: str = 'spring'
+    seasons: list = field(default_factory=lambda: ['spring', 'summer', 'autumn', 'winter'])
+    season_index: int = 0
+    disaster_chance: float = 0.01
+    event_chance: float = 0.02
+    depletion_rate: float = 0.05
 
     def change_conditions(self):
         self.conditions = random.choice(['good', 'bad'])
 
     def update_resources(self):
-        if self.conditions == 'good':
-            self.resources += 50
-        elif self.conditions == 'bad':
-            self.resources -= 50
+        self.resources += 50 if self.conditions == 'good' else -50
         self.resources = max(0, self.resources - int(self.resources * self.depletion_rate))
 
     def change_season(self):
