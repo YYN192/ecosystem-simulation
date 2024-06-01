@@ -4,9 +4,14 @@ This project simulates an ecosystem with various species interacting with each o
 
 ## 🌟 Features
 
-- **Species Interactions**: 🦅 Predation, 🐺 competition, and 🤝 symbiosis between species.
-- **Environmental Factors**: 🌞 Seasonal changes, 🌱 resource depletion, and 🎲 random events such as disasters and special occurrences.
-- **Dynamic Population Changes**: Species populations adjust based on birth and death rates, influenced by the environment.
+- **Species Interactions**: 🦅 Predation, 🐺 competition, and 🤝 symbiosis between species. More sophisticated interaction rules like mutualism, commensalism, and competition models.
+- **Environmental Factors**: 🌞 Seasonal changes, 🌱 resource depletion, and 🎲 random events such as disasters and special occurrences. Dynamic environment conditions based on various factors like overpopulation and resource depletion.
+- **Dynamic Population Changes**: Species populations adjust based on birth and death rates, influenced by the environment. Includes behaviors like migration or hibernation for specific species.
+- **Resource Management**: Detailed model for resource management where different species compete for specific types of resources (e.g., water, food, shelter).
+- **User Interface**: Input validation, enhanced visualization with Plotly, and user controls for dynamic adjustments.
+- **Performance and Scalability**: Optimized performance for larger simulations using numpy for numerical computations. Feature to save and load simulation states.
+- **Documentation and Testing**: Comprehensive docstrings for classes and methods, user manual, and unit and integration tests.
+- **Additional Features**: Integration of real-world data, predefined scenarios, and advanced analytics for insights into simulation results.
 
 ## 🐾 Species Included
 
@@ -33,7 +38,7 @@ This project simulates an ecosystem with various species interacting with each o
     python ecosystem_simulation.py
     ```
 2. Enter the number of iterations and initial resource quantity.
-3. Enter the initial population and birth/death rates for each species.
+3. Enter the initial population and birth/death rates for each species, or use the "Autofill" button to populate these values with defaults.
 4. Click "Start Simulation" to run the simulation.
 5. View the simulation report and population plots.
 6. Optionally, save the simulation logs to a file.
@@ -58,7 +63,9 @@ The simulation provides a graphical user interface (GUI) built with `tkinter`. T
 - **Species Parameters**: Fields for inputting population, birth rate, and death rate for each species.
 - **Buttons**:
   - **Start Simulation**: Runs the simulation with the provided parameters.
-  - **Save Logs**: Saves the simulation logs to a specified file.
+  - **Save Report**: Saves the simulation report to a file.
+  - **Export Logs**: Saves the simulation logs to a JSON file.
+  - **Autofill**: Fills the birth rates, death rates, and populations with predefined values and sets iterations to 8.
 
 ## 🌼 Example
 
@@ -67,7 +74,7 @@ The simulation provides a graphical user interface (GUI) built with `tkinter`. T
 3. Review the simulation report and population plots displayed.
 4. Optionally, save the logs by entering a filename and clicking "Save Logs".
 
-![github](https://github.com/YYN192/ecosystem-simulation/assets/110526560/3db6c967-ea2c-4dc6-a50a-ad759eef9fa7)
+![Simulation Screenshot](https://github.com/YYN192/ecosystem-simulation/assets/110526560/3db6c967-ea2c-4dc6-a50a-ad759eef9fa7)
 
 ## 📝 Code Overview
 
@@ -89,7 +96,9 @@ Represents the environment with resources, conditions, and the current season. I
 ### GUI Functions
 
 - `start_simulation`: Starts the simulation and displays the results.
-- `save_logs`: Saves the simulation logs to a specified file.
+- `save_report`: Saves the simulation report to a specified file.
+- `export_simulation_logs`: Saves the simulation logs to a specified file.
+- `autofill`: Fills the birth rates, death rates, and populations with predefined values and sets iterations to 8.
 
 ## 🤝 Contribution
 
